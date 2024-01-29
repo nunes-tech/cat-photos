@@ -50,6 +50,7 @@ dependencies {
     //Hilt
     implementation("com.google.dagger:hilt-android:2.48")
     testImplementation("junit:junit:4.12")
+    testImplementation("junit:junit:4.12")
     kapt("com.google.dagger:hilt-android-compiler:2.48")
 
     //Livedata viewmodel

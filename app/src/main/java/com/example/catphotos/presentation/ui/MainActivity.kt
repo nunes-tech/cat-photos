@@ -29,7 +29,7 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(binding.root)
         setAdapterCats()
-        recuperarImagensApi()
+        getListOfImagesCat()
 
         mainViewModel.listaGatos.observe(this) { listUrlImagesCat ->
             adapter.updateListImagesCats( listUrlImagesCat )
@@ -52,7 +52,7 @@ class MainActivity : AppCompatActivity() {
                         val isPossibleDown = recyclerView.canScrollVertically(1)
                         if (!isPossibleDown) {
                             Toast.makeText(applicationContext, "Carregando + imagens", Toast.LENGTH_SHORT).show()
-                            recuperarImagensApi()
+                            getListOfImagesCat()
                         }
                     }
                 }
@@ -60,7 +60,7 @@ class MainActivity : AppCompatActivity() {
         )
     }
 
-    private fun recuperarImagensApi() {
+    private fun getListOfImagesCat() {
         lifecycleScope.launch {
             mainViewModel.getImagesTheCatApi()
         }

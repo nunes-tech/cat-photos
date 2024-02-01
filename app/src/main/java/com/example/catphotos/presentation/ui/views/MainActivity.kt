@@ -61,6 +61,7 @@ class MainActivity : AppCompatActivity() {
                     if (dy > 0 ) {
                         totalItemCount = layoutManager.itemCount
                         lastVisibleItem = layoutManager.findLastVisibleItemPosition()
+
                         if (!isLoading && totalItemCount <= lastVisibleItem + visibleThreshold) {
                             message("Carregando + imagens")
                             getListOfImagesCat()

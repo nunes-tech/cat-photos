@@ -4,6 +4,7 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView.Adapter
 import androidx.recyclerview.widget.RecyclerView.ViewHolder
+import com.example.catphotos.R
 import com.example.catphotos.databinding.RecyclerCatsBinding
 import com.example.catphotos.domain.models.UrlImageCat
 import com.squareup.picasso.Picasso
@@ -19,6 +20,8 @@ class CatsAdapter: Adapter<CatsAdapter.CatsViewHolder>() {
 
             Picasso.get()
                 .load(listCats[position].url)
+                .placeholder(R.drawable.load)
+                .error(R.drawable.error)
                 .into(binding.imageGato)
 
         }

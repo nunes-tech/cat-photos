@@ -1,4 +1,4 @@
-package com.example.catphotos.presentation.ui
+package com.example.catphotos.presentation.ui.views
 
 import android.os.Bundle
 import android.widget.Toast
@@ -11,6 +11,7 @@ import com.example.catphotos.data.remote.TheCatApiService
 import com.example.catphotos.databinding.ActivityMainBinding
 import com.example.catphotos.presentation.ui.adapters.CatsAdapter
 import com.example.catphotos.presentation.viewmodels.MainViewModel
+import com.example.catphotos.utils.Extensions.message
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -21,9 +22,18 @@ class MainActivity : AppCompatActivity() {
         ActivityMainBinding.inflate(layoutInflater)
     }
 
+    //Variaveis para controle de carregamento de itens do RecyclerView
+    private val visibleThreshold = 5 // Número de itens a serem carregados antes do final da lista
+    private var isLoading = false
+    private var lastVisibleItem = 0
+    private var totalItemCount = 0
+
+
     private val mainViewModel: MainViewModel by viewModels()
 
     val adapter by lazy { CatsAdapter() }
+    val layoutManager by lazy { GridLayoutManager(this, 2) }
+
     @Inject lateinit var apiTheCatService : TheCatApiService
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -38,7 +48,7 @@ class MainActivity : AppCompatActivity() {
 
     private fun setAdapterCats() {
         binding.rvImagesCats.adapter = adapter
-        binding.rvImagesCats.layoutManager = GridLayoutManager(this@MainActivity, 2)
+        binding.rvImagesCats.layoutManager = layoutManager
         setScrollEventOnRecyclerView()
     }
 
@@ -49,11 +59,18 @@ class MainActivity : AppCompatActivity() {
                 override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
                     super.onScrolled(recyclerView, dx, dy)
                     if (dy > 0 ) {
-                        val isPossibleDown = recyclerView.canScrollVertically(1)
-                        if (!isPossibleDown) {
-                            Toast.makeText(applicationContext, "Carregando + imagens", Toast.LENGTH_SHORT).show()
+                        totalItemCount = layoutManager.itemCount
+                        lastVisibleItem = layoutManager.findLastVisibleItemPosition()
+                        message( "Total de itens $totalItemCount")
+                        message( "Ultimo item visivel posição $lastVisibleItem")
+                        if (!isLoading && totalItemCount <= lastVisibleItem + visibleThreshold) {
+                            message("Carregando + imagens")
                             getListOfImagesCat()
                         }
+                        /*val isPossibleDown = recyclerView.canScrollVertically(1)
+                        if (!isPossibleDown) {
+
+                        }*/
                     }
                 }
             }
